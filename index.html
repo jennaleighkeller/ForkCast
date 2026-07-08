@@ -196,6 +196,14 @@
     flex-wrap: wrap;
   }
 
+  .rp-drive-status {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 11.5px;
+    color: var(--sage);
+    margin: 8px 0 0;
+  }
+  .rp-drive-status.is-error { color: var(--coral); }
+
   .rp-nav {
     display: flex;
     gap: 6px;
@@ -737,6 +745,48 @@
     line-height: 1.35;
   }
 
+  .rp-servings-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .rp-servings-label {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    color: rgba(247,244,236,0.5);
+    margin-right: auto;
+  }
+  .rp-servings-btn {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    background: rgba(247,244,236,0.06);
+    color: var(--paper);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .rp-servings-btn:hover {
+    border-color: var(--sage);
+    background: rgba(143,166,128,0.15);
+  }
+  .rp-servings-value {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--paper);
+    min-width: 66px;
+    text-align: center;
+    flex: none;
+  }
+
   .rp-item-shared {
     font-size: 10.5px;
     color: rgba(30,42,31,0.45);
@@ -995,8 +1045,10 @@
     <div class="rp-header-btns">
       <button class="rp-add-btn" id="rpAddBtn">+ Add recipe</button>
       <button class="rp-manage-btn" id="rpManageBtn">Edit recipe</button>
+      <button class="rp-manage-btn" id="rpDriveBtn">☁️ Sign in with Google</button>
     </div>
   </div>
+  <p class="rp-drive-status" id="rpDriveStatus" style="display:none;"></p>
 
   <div class="rp-nav" id="rpNav">
     <button type="button" class="rp-nav-btn is-active" data-page="recipes">Recipes</button>
@@ -1333,9 +1385,176 @@
       } catch (err) { return null; }
     },
   };
-  const store = (typeof window !== 'undefined' && window.storage && typeof window.storage.get === 'function')
+  const store_ = (typeof window !== 'undefined' && window.storage && typeof window.storage.get === 'function')
     ? window.storage
     : localStorageFallback;
+  let store = store_; // mutable so signing into Google Drive can swap the active backend
+
+  // --- Optional Google Drive sync (personal use) ---
+  // Stores everything in one hidden JSON file in the signed-in user's Drive
+  // "app data" folder (invisible in their normal Drive, only this app can see it).
+  const GOOGLE_CLIENT_ID = "40599220195-f8qq7u3elanskjfcfq1oi7aspcgc4m08.apps.googleusercontent.com";
+  const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.appdata";
+  const DRIVE_FILE_NAME = "meal-planner-data.json";
+
+  let driveAccessToken = null;
+  let driveFileId = null;
+  let driveCache = null;
+  let tokenClient = null;
+  let driveSaveTimer = null;
+
+  function loadGoogleIdentityScript(){
+    return new Promise((resolve, reject) => {
+      if (window.google && window.google.accounts && window.google.accounts.oauth2) return resolve();
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  async function driveFetch(url, options){
+    options = options || {};
+    const res = await fetch(url, {
+      ...options,
+      headers: { ...(options.headers || {}), Authorization: `Bearer ${driveAccessToken}` },
+    });
+    if (!res.ok){
+      const text = await res.text().catch(() => '');
+      throw new Error(`Drive API error ${res.status}: ${text}`);
+    }
+    return res;
+  }
+
+  async function findDriveFile(){
+    const q = encodeURIComponent(`name='${DRIVE_FILE_NAME}'`);
+    const res = await driveFetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&fields=files(id,name)`);
+    const data = await res.json();
+    return (data.files && data.files[0]) ? data.files[0].id : null;
+  }
+
+  async function readDriveFile(fileId){
+    const res = await driveFetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`);
+    const text = await res.text();
+    try { return JSON.parse(text); } catch (err) { return {}; }
+  }
+
+  async function writeDriveFile(dataObj){
+    const metadata = driveFileId ? { name: DRIVE_FILE_NAME } : { name: DRIVE_FILE_NAME, parents: ['appDataFolder'] };
+    const boundary = 'rpboundary' + Date.now();
+    const body =
+      `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n` +
+      `--${boundary}\r\nContent-Type: application/json\r\n\r\n${JSON.stringify(dataObj)}\r\n` +
+      `--${boundary}--`;
+    const url = driveFileId
+      ? `https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=multipart`
+      : `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`;
+    const res = await driveFetch(url, {
+      method: driveFileId ? 'PATCH' : 'POST',
+      headers: { 'Content-Type': `multipart/related; boundary=${boundary}` },
+      body,
+    });
+    const json = await res.json();
+    if (!driveFileId) driveFileId = json.id;
+  }
+
+  function scheduleDriveSave(){
+    clearTimeout(driveSaveTimer);
+    driveSaveTimer = setTimeout(() => {
+      writeDriveFile(driveCache).catch(err => {
+        console.error('Drive save failed:', err);
+        setDriveStatus('Could not save to Drive — will keep trying.', true);
+      });
+    }, 600);
+  }
+
+  const driveStore = {
+    async get(key){
+      if (!driveCache || driveCache[key] === undefined) return null;
+      return { key, value: driveCache[key], shared: false };
+    },
+    async set(key, value){
+      if (!driveCache) driveCache = {};
+      driveCache[key] = value;
+      scheduleDriveSave();
+      return { key, value, shared: false };
+    },
+  };
+
+  function setDriveStatus(text, isError){
+    driveStatusEl.textContent = text;
+    driveStatusEl.style.display = text ? 'block' : 'none';
+    driveStatusEl.classList.toggle('is-error', !!isError);
+  }
+
+  async function refreshAllFromStore(){
+    await Promise.all([loadRecipes(), loadKitchen(), loadWeeklyPlan()]);
+    renderFilters();
+    renderCards();
+    renderList();
+    renderKitchen();
+    if (pageWeekly.style.display !== 'none') renderWeekly();
+  }
+
+  async function initDriveAfterSignIn(){
+    setDriveStatus('Connecting to Google Drive…');
+    driveFileId = await findDriveFile();
+    if (driveFileId){
+      driveCache = await readDriveFile(driveFileId);
+    } else {
+      // First time signing in — seed Drive with whatever's already saved in this browser
+      driveCache = {};
+      [STORAGE_KEY, KITCHEN_STORAGE_KEY, WEEKLY_STORAGE_KEY].forEach(k => {
+        const v = localStorage.getItem(k);
+        if (v !== null) driveCache[k] = v;
+      });
+      await writeDriveFile(driveCache);
+    }
+    store = driveStore;
+    await refreshAllFromStore();
+    driveBtn.textContent = '☁️ Signed in — Sign out';
+    driveBtn.classList.add('is-active');
+    setDriveStatus('Synced with Google Drive.');
+  }
+
+  async function handleDriveSignIn(){
+    try {
+      await loadGoogleIdentityScript();
+    } catch (err){
+      setDriveStatus('Could not load Google sign-in. Check your connection and try again.', true);
+      return;
+    }
+    if (!tokenClient){
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: DRIVE_SCOPE,
+        callback: async (tokenResponse) => {
+          if (tokenResponse && tokenResponse.access_token){
+            driveAccessToken = tokenResponse.access_token;
+            try {
+              await initDriveAfterSignIn();
+            } catch (err){
+              console.error('Drive init failed:', err);
+              setDriveStatus('Could not connect to Google Drive. Still saving locally in this browser.', true);
+            }
+          }
+        },
+      });
+    }
+    tokenClient.requestAccessToken();
+  }
+
+  function handleDriveSignOut(){
+    driveAccessToken = null;
+    driveFileId = null;
+    driveCache = null;
+    store = store_;
+    driveBtn.textContent = '☁️ Sign in with Google';
+    driveBtn.classList.remove('is-active');
+    setDriveStatus('Signed out — saving locally in this browser again.');
+    refreshAllFromStore();
+  }
 
   function normalizeRecipe(r){
     // Migrates older saved recipes that used a single combined "tag" field
@@ -1358,7 +1577,7 @@
   }
 
   let recipes = DEFAULT_RECIPES;
-  const picked = new Set();
+  const picked = new Map(); // recipeId -> servings multiplier (1 = the recipe's normal 2 servings)
   const gotItems = new Set(); // items checked off, keyed by "name|unit"
   let activeSeason = "all"; // "all" | one of SEASONS ids
   let ingredientFilter = ""; // lowercase substring to match against ingredient names
@@ -1389,6 +1608,8 @@
   const ingFilterClear = document.getElementById('rpIngFilterClear');
   const addBtn = document.getElementById('rpAddBtn');
   const manageBtn = document.getElementById('rpManageBtn');
+  const driveBtn = document.getElementById('rpDriveBtn');
+  const driveStatusEl = document.getElementById('rpDriveStatus');
   const modalOverlay = document.getElementById('rpModalOverlay');
   const modalTitle = document.getElementById('rpModalTitle');
   const formName = document.getElementById('rpFormName');
@@ -1694,11 +1915,14 @@
     grid.classList.toggle('is-managing', manageMode);
 
     const pickedRecipes = recipes.filter(x => picked.has(x.id));
+    const BASE_SERVINGS = 2;
 
     grid.innerHTML = list.map(r => {
-      const shared = (!picked.has(r.id) && pickedRecipes.length) ? sharedIngredientNames(r, pickedRecipes) : [];
+      const isPicked = picked.has(r.id);
+      const shared = (!isPicked && pickedRecipes.length) ? sharedIngredientNames(r, pickedRecipes) : [];
+      const servings = isPicked ? (picked.get(r.id) || 1) * BASE_SERVINGS : BASE_SERVINGS;
       return `
-      <div class="rp-card ${picked.has(r.id) ? 'is-picked' : ''}" data-id="${r.id}" tabindex="0" role="button" aria-pressed="${picked.has(r.id)}">
+      <div class="rp-card ${isPicked ? 'is-picked' : ''}" data-id="${r.id}" tabindex="0" role="button" aria-pressed="${isPicked}">
         ${manageMode ? (confirmingDeleteId === r.id ? `
           <div class="rp-confirm-row">
             <button type="button" class="rp-confirm-yes" data-action="confirm-delete" data-id="${r.id}">Delete</button>
@@ -1716,11 +1940,19 @@
             ${displayTag(r) ? `<p class="rp-tag-row">${displayTag(r)}</p>` : ''}
             <p class="rp-mealtype-row">${MEAL_TYPE_META[effectiveMealType(r)].icon} ${MEAL_TYPE_META[effectiveMealType(r)].label}</p>
           </div>
-          <div class="rp-check">${picked.has(r.id) ? '✓' : ''}</div>
+          <div class="rp-check">${isPicked ? '✓' : ''}</div>
         </div>
         <p class="rp-desc">${r.desc || ''}</p>
         <p class="rp-meta">${r.ingredients.length} ingredient${r.ingredients.length !== 1 ? 's' : ''}${kitchenItems.length ? ` · ${matchedIngredientCount(r)} of ${r.ingredients.length} in your kitchen` : ''}</p>
         ${shared.length ? `<p class="rp-overlap-hint">🔗 Shares ${shared.slice(0,3).join(', ')}${shared.length > 3 ? ` +${shared.length - 3} more` : ''} with your picks</p>` : ''}
+        ${isPicked ? `
+          <div class="rp-servings-row">
+            <span class="rp-servings-label">Shopping for</span>
+            <button type="button" class="rp-servings-btn" data-action="qty-dec" data-id="${r.id}" aria-label="Fewer servings">−</button>
+            <span class="rp-servings-value">${servings} servings</span>
+            <button type="button" class="rp-servings-btn" data-action="qty-inc" data-id="${r.id}" aria-label="More servings">+</button>
+          </div>
+        ` : ''}
       </div>
     `;
     }).join('');
@@ -1733,6 +1965,19 @@
       card.addEventListener('keydown', (e) => {
         if (e.target.closest('[data-action]')) return;
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleRecipe(card.dataset.id); }
+      });
+    });
+
+    grid.querySelectorAll('[data-action="qty-dec"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        adjustServings(btn.dataset.id, -1);
+      });
+    });
+    grid.querySelectorAll('[data-action="qty-inc"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        adjustServings(btn.dataset.id, 1);
       });
     });
 
@@ -1918,6 +2163,10 @@
     manageBtn.classList.toggle('is-active', manageMode);
     renderCards();
   });
+  driveBtn.addEventListener('click', () => {
+    if (driveAccessToken) handleDriveSignOut();
+    else handleDriveSignIn();
+  });
   formCancelBtn.addEventListener('click', closeForm);
   formSaveBtn.addEventListener('click', saveForm);
   addIngBtn.addEventListener('click', () => addIngredientRow());
@@ -1931,23 +2180,33 @@
       clearRecipeFromWeeklyPlan(id);
       persistWeeklyPlan();
     } else {
-      picked.add(id);
+      picked.set(id, 1);
     }
     renderCards();
     renderList();
     renderWeekly();
   }
 
+  function adjustServings(id, delta){
+    if (!picked.has(id)) return;
+    const next = Math.max(1, (picked.get(id) || 1) + delta);
+    picked.set(id, next);
+    renderCards();
+    renderList();
+  }
+
   function buildAggregatedList(){
     const map = new Map(); // key: name|unit -> {name, unit, amount, recipeIds}
     recipes.forEach(r => {
       if (!picked.has(r.id)) return;
+      const multiplier = picked.get(r.id) || 1;
       r.ingredients.forEach(ing => {
         const key = ing.n + '|' + (ing.u || '');
-        if (!map.has(key)) map.set(key, {name: ing.n, unit: ing.u, amount: ing.a || 0, countOnly: ing.a === undefined, recipeIds: new Set([r.id])});
+        const scaledAmount = (ing.a || 0) * multiplier;
+        if (!map.has(key)) map.set(key, {name: ing.n, unit: ing.u, amount: scaledAmount, countOnly: ing.a === undefined, recipeIds: new Set([r.id])});
         else {
           const cur = map.get(key);
-          cur.amount += (ing.a || 0);
+          cur.amount += scaledAmount;
           cur.recipeIds.add(r.id);
         }
       });
