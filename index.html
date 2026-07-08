@@ -169,10 +169,42 @@
     color: var(--pine);
     font-weight: 600;
   }
+
+  .rp-course-select {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    background: rgba(247,244,236,0.05);
+    border: 1px solid var(--line);
+    color: rgba(247,244,236,0.7);
+    padding: 7px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  }
+  .rp-course-select:hover {
+    border-color: rgba(143,166,128,0.55);
+    color: var(--paper);
+  }
+  .rp-course-select:focus {
+    outline: none;
+    border-color: var(--sage);
+  }
+  .rp-course-select option {
+    background: var(--pine);
+    color: var(--paper);
+  }
   .rp-filter-dot {
     width: 7px; height: 7px;
     border-radius: 50%;
     flex: none;
+  }
+
+  .rp-filter-divider {
+    width: 1px;
+    align-self: stretch;
+    background: var(--line);
+    margin: 2px 2px;
   }
 
   .rp-grid {
@@ -206,33 +238,52 @@
 
   .rp-nav {
     display: flex;
-    gap: 6px;
+    gap: 3px;
     margin-bottom: 20px;
     border-bottom: 1px solid var(--line);
+    padding: 0 2px;
   }
   .rp-nav-btn {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     font-size: 13px;
     font-weight: 600;
-    background: none;
-    border: none;
-    color: rgba(247,244,236,0.5);
-    padding: 9px 4px 12px;
-    margin-right: 14px;
+    background: rgba(247,244,236,0.03);
+    border: 1px solid var(--line);
+    border-bottom: none;
+    color: rgba(247,244,236,0.45);
+    padding: 10px 20px;
+    border-radius: 10px 10px 0 0;
     cursor: pointer;
     position: relative;
+    transform: translateY(1px);
+    transition: color 0.15s ease, background 0.15s ease, transform 0.15s ease;
   }
-  .rp-nav-btn:hover { color: rgba(247,244,236,0.85); }
+  .rp-nav-btn:hover {
+    color: rgba(247,244,236,0.8);
+    background: rgba(247,244,236,0.06);
+  }
   .rp-nav-btn.is-active {
     color: var(--paper);
+    background: var(--pine);
+    border-color: var(--line);
+    transform: translateY(0);
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.18);
+    z-index: 1;
   }
   .rp-nav-btn.is-active::after {
     content: "";
     position: absolute;
     left: 0; right: 0; bottom: -1px;
-    height: 2px;
+    height: 1px;
+    background: var(--pine);
+  }
+  .rp-nav-btn.is-active::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 16px; right: 16px;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
     background: var(--coral);
-    border-radius: 2px;
   }
 
   .rp-page-hint {
@@ -1273,9 +1324,14 @@
         <input type="text" id="rpIngFilter" placeholder="Filter by ingredient…" class="rp-ing-filter-input">
         <button type="button" id="rpIngFilterClear" class="rp-ing-filter-clear" style="display:none;" aria-label="Clear ingredient filter">✕</button>
       </div>
-      <button type="button" class="rp-filter-btn rp-kitchen-filter-btn" id="rpKitchenFilterBtn">🧺 Uses what's in my kitchen</button>
-      <button type="button" class="rp-filter-btn rp-kitchen-filter-btn" id="rpSpecialFilterBtn">🎉 Holiday &amp; special occasions</button>
-        <button type="button" class="rp-filter-btn rp-kitchen-filter-btn" id="rpFavFilterBtn">★ Favorites</button>
+      <select id="rpQuickFilter" class="rp-course-select">
+        <option value="all">All recipes</option>
+        <option value="kitchen">🧺 Uses my kitchen</option>
+        <option value="favorites">★ Favorites</option>
+        <option value="special">✨ Specialties</option>
+        <option value="side">🥗 Sides</option>
+        <option value="main">🍽️ Mains</option>
+      </select>
     </div>
   </div>
 
@@ -1395,7 +1451,7 @@
         <div class="rp-form-seasons" id="rpFormSeasons"></div>
       </div>
 
-      <div class="rp-form-label">Best for (optional — leave blank to auto-detect)
+      <div class="rp-form-label">Meal type (optional — leave blank to auto-detect)
         <div class="rp-form-seasons" id="rpFormMealType"></div>
       </div>
 
@@ -1501,6 +1557,7 @@
       time: "10 min",
       notes: "No cooking",
       mealType: "lunch",
+      course: "side",
       desc: "Tomatoes, mozzarella, and basil with a good olive oil.",
       seasons: ["summer"],
       ingredients: [
@@ -1523,6 +1580,7 @@
       time: "20 min",
       notes: "",
       mealType: "lunch",
+      course: "side",
       desc: "Herb-heavy quinoa salad with cucumber, tomato, and lemon.",
       seasons: ["summer","spring"],
       ingredients: [
@@ -1547,6 +1605,7 @@
       time: "20 min",
       notes: "",
       mealType: "lunch",
+      course: "main",
       desc: "Roasted chickpeas over greens with a tahini drizzle.",
       seasons: ["autumn","winter"],
       ingredients: [
@@ -1572,6 +1631,7 @@
       time: "30 min",
       notes: "",
       mealType: "dinner",
+      course: "main",
       desc: "Warming, protein-rich soup with carrots and cumin.",
       seasons: ["autumn","winter"],
       ingredients: [
@@ -1597,6 +1657,7 @@
       time: "20 min",
       notes: "",
       mealType: "dinner",
+      course: "main",
       desc: "Crisp vegetables and tofu tossed in a quick ginger-soy sauce.",
       seasons: ["spring","summer","autumn","winter"],
       ingredients: [
@@ -1623,6 +1684,7 @@
       time: "25 min",
       notes: "",
       mealType: "dinner",
+      course: "main",
       desc: "Oven-baked salmon with lemon, served over sautéed greens.",
       seasons: ["spring","autumn","winter"],
       ingredients: [
@@ -1647,6 +1709,7 @@
       time: "35 min",
       notes: "Mostly hands-off",
       mealType: "dinner",
+      course: "main",
       desc: "Chicken thighs roasted with seasonal vegetables on one tray.",
       seasons: ["summer","autumn"],
       ingredients: [
@@ -1822,7 +1885,7 @@
 
     const fullSections = recipes.map(r => `
       <h3>${r.name}</h3>
-      <p><em>${MEAL_TYPE_META[effectiveMealType(r)].label}${r.occasion ? ` · ${r.occasion}` : ''}${displayTag(r) ? ` · ${displayTag(r)}` : ''}</em></p>
+      <p><em>${[browsingBadge(r), r.occasion, displayTag(r)].filter(Boolean).join(' · ')}</em></p>
       ${r.desc ? `<p>${r.desc}</p>` : ''}
       <p><strong>Ingredients (serves 2)</strong></p>
       <ul>${r.ingredients.map(ing => `<li>${ing.n}${ing.a !== undefined ? ` — ${fmtAmt(ing.a, ing.u)}` : ''}</li>`).join('')}</ul>
@@ -1981,6 +2044,7 @@
     if (r.steps === undefined) r.steps = [];
     if (r.occasion === undefined) r.occasion = '';
     if (r.isFavorite === undefined) r.isFavorite = false;
+    if (r.course === undefined) r.course = '';
     return r;
   }
 
@@ -1996,9 +2060,7 @@
   const gotItems = new Set(); // items checked off, keyed by "name|unit"
   let activeSeason = "all"; // "all" | one of SEASONS ids
   let ingredientFilter = ""; // lowercase substring to match against ingredient names
-  let onlyMakeable = false; // whether to filter to recipes fully covered by kitchen items
-  let onlySpecial = false; // whether to filter to recipes tagged with an occasion (holiday/special)
-  let onlyFavorites = false; // whether to filter to starred/favorite recipes only
+  let quickFilter = 'all'; // 'all' | 'kitchen' | 'favorites' | 'special' | 'side' | 'main'
   let kitchenItems = []; // array of strings the user says they already have
   let editingId = null; // id of recipe being edited, or null when adding
   let confirmingDeleteId = null; // id currently showing "confirm delete?"
@@ -2045,9 +2107,7 @@
   const formCancelBtn = document.getElementById('rpFormCancel');
   const formSaveBtn = document.getElementById('rpFormSave');
   const formErr = document.getElementById('rpFormErr');
-  const kitchenFilterBtn = document.getElementById('rpKitchenFilterBtn');
-  const specialFilterBtn = document.getElementById('rpSpecialFilterBtn');
-  const favFilterBtn = document.getElementById('rpFavFilterBtn');
+  const quickFilterSelect = document.getElementById('rpQuickFilter');
   const kitchenInput = document.getElementById('rpKitchenInput');
   const kitchenAddBtn = document.getElementById('rpKitchenAddBtn');
   const kitchenListEl = document.getElementById('rpKitchenList');
@@ -2191,7 +2251,7 @@
 
     filtersEl.innerHTML = allBtn + seasonBtns;
 
-    filtersEl.querySelectorAll('.rp-filter-btn').forEach(btn => {
+    filtersEl.querySelectorAll('[data-season]').forEach(btn => {
       btn.addEventListener('click', () => {
         activeSeason = btn.dataset.season;
         renderFilters();
@@ -2310,11 +2370,16 @@
     return score === 3 ? 'Cook early — spoils fast' : score === 2 ? 'Mid-week is fine' : 'Keeps well';
   }
 
-  // --- Meal-type and prep-ahead heuristics for auto-generating the week ---
+  // --- Meal-type heuristics (internal — used only to schedule the Weekly Plan) ---
   const MEAL_TYPE_META = {
     breakfast: {icon:"🍳", label:"Breakfast"},
     lunch: {icon:"🥗", label:"Lunch"},
     dinner: {icon:"🍽️", label:"Dinner"},
+  };
+  // --- Course: a simpler, more useful lens for browsing than lunch/dinner ---
+  const COURSE_META = {
+    side: {icon:"🥗", label:"Side"},
+    main: {icon:"🍽️", label:"Main"},
   };
   const BREAKFAST_KEYWORDS = ["yogurt","oats","omelette","omelet","egg","pancake","smoothie","granola","porridge"];
   const LUNCH_KEYWORDS = ["salad","bowl","wrap","sandwich","tabbouleh"];
@@ -2331,6 +2396,15 @@
     return (r.mealType && MEAL_TYPE_META[r.mealType]) ? r.mealType : guessMealType(r);
   }
 
+  // User-facing badge: only Breakfast is shown from the internal meal-type
+  // scheduling data (Lunch/Dinner aren't a useful distinction for browsing).
+  // Otherwise falls back to the recipe's Side/Main course, if set.
+  function browsingBadge(r){
+    if (effectiveMealType(r) === 'breakfast') return `${MEAL_TYPE_META.breakfast.icon} ${MEAL_TYPE_META.breakfast.label}`;
+    if (r.course && COURSE_META[r.course]) return `${COURSE_META[r.course].icon} ${COURSE_META[r.course].label}`;
+    return '';
+  }
+
   function isPrepAheadRecipe(r){
     const n = (r.notes || '').toLowerCase();
     return PREP_AHEAD_KEYWORDS.some(k => n.includes(k));
@@ -2342,15 +2416,10 @@
     if (ingredientFilter) {
       list = list.filter(r => r.ingredients.some(ing => ing.n.toLowerCase().includes(ingredientFilter)));
     }
-    if (onlyMakeable) {
-      list = list.filter(r => recipeHasOverlap(r));
-    }
-    if (onlySpecial) {
-      list = list.filter(r => r.occasion && r.occasion.trim());
-    }
-    if (onlyFavorites) {
-      list = list.filter(r => r.isFavorite);
-    }
+    if (quickFilter === 'kitchen') list = list.filter(r => recipeHasOverlap(r));
+    else if (quickFilter === 'favorites') list = list.filter(r => r.isFavorite);
+    else if (quickFilter === 'special') list = list.filter(r => r.occasion && r.occasion.trim());
+    else if (quickFilter === 'side' || quickFilter === 'main') list = list.filter(r => r.course === quickFilter);
     return list;
   }
 
@@ -2359,9 +2428,10 @@
 
     if (list.length === 0){
       let msg = 'No recipes tagged for this season yet.';
-      if (onlyMakeable) msg = kitchenItems.length ? `No recipes overlap with what's in your kitchen yet.` : `Add a few ingredients to "In My Kitchen" first.`;
-      else if (onlySpecial) msg = `No holiday or special-occasion recipes yet — add one and set its "Occasion" field.`;
-      else if (onlyFavorites) msg = `No favorites yet — tap the ☆ on a recipe to star it.`;
+      if (quickFilter === 'kitchen') msg = kitchenItems.length ? `No recipes overlap with what's in your kitchen yet.` : `Add a few ingredients to "In My Kitchen" first.`;
+      else if (quickFilter === 'special') msg = `No specialty recipes yet — add one and set its "Occasion" field.`;
+      else if (quickFilter === 'favorites') msg = `No favorites yet — tap the ☆ on a recipe to star it.`;
+      else if (quickFilter === 'side' || quickFilter === 'main') msg = `No ${COURSE_META[quickFilter].label.toLowerCase()}s tagged yet — set a recipe's "Meal type" field.`;
       else if (ingredientFilter) msg = `No recipes with "${ingredientFilter}" for this season.`;
       grid.innerHTML = `<p class="rp-no-match">${msg}</p>`;
       return;
@@ -2393,7 +2463,7 @@
           <div>
             <p class="rp-name">${r.name}</p>
             ${displayTag(r) ? `<p class="rp-tag-row">${displayTag(r)}</p>` : ''}
-            <p class="rp-mealtype-row">${MEAL_TYPE_META[effectiveMealType(r)].icon} ${MEAL_TYPE_META[effectiveMealType(r)].label}${r.occasion ? ` · 🎉 ${r.occasion}` : ''}</p>
+            ${[browsingBadge(r), r.occasion ? `🎉 ${r.occasion}` : ''].filter(Boolean).length ? `<p class="rp-mealtype-row">${[browsingBadge(r), r.occasion ? `🎉 ${r.occasion}` : ''].filter(Boolean).join(' · ')}</p>` : ''}
           </div>
           <div class="rp-card-top-right">
             <button type="button" class="rp-star-btn ${r.isFavorite ? 'is-fav' : ''}" data-action="toggle-fav" data-id="${r.id}" aria-label="${r.isFavorite ? 'Remove from favorites' : 'Add to favorites'}">${r.isFavorite ? '★' : '☆'}</button>
@@ -2515,9 +2585,14 @@
   }
 
   function renderMealTypeChips(activeId){
-    formMealType.innerHTML = Object.keys(MEAL_TYPE_META).map(id => `
-      <button type="button" class="rp-season-chip ${activeId === id ? 'is-on' : ''}" data-mealtype="${id}">
-        ${MEAL_TYPE_META[id].icon} ${MEAL_TYPE_META[id].label}
+    const options = [
+      { id: 'breakfast', icon: MEAL_TYPE_META.breakfast.icon, label: MEAL_TYPE_META.breakfast.label },
+      { id: 'side', icon: COURSE_META.side.icon, label: COURSE_META.side.label },
+      { id: 'main', icon: COURSE_META.main.icon, label: COURSE_META.main.label },
+    ];
+    formMealType.innerHTML = options.map(o => `
+      <button type="button" class="rp-season-chip ${activeId === o.id ? 'is-on' : ''}" data-mealtype="${o.id}">
+        ${o.icon} ${o.label}
       </button>
     `).join('');
     formMealType.querySelectorAll('.rp-season-chip').forEach(chip => {
@@ -2590,7 +2665,8 @@
     formErr.style.display = 'none';
     formErr.textContent = '';
     renderSeasonChips(recipe ? recipe.seasons : []);
-    renderMealTypeChips(recipe ? (recipe.mealType || '') : '');
+    const initialMealCourse = recipe ? (recipe.mealType === 'breakfast' ? 'breakfast' : (recipe.course || '')) : '';
+    renderMealTypeChips(initialMealCourse);
     formIngList.innerHTML = '';
     if (recipe && recipe.ingredients.length){
       recipe.ingredients.forEach(ing => addIngredientRow(ing));
@@ -2638,8 +2714,10 @@
     const occasion = formOccasion.value.trim();
     const desc = formDesc.value.trim();
     const seasons = Array.from(formSeasons.querySelectorAll('.rp-season-chip.is-on')).map(c => c.dataset.season);
-    const mealTypeChip = formMealType.querySelector('.rp-season-chip.is-on');
-    const mealType = mealTypeChip ? mealTypeChip.dataset.mealtype : '';
+    const mealCourseChip = formMealType.querySelector('.rp-season-chip.is-on');
+    const mealCourseValue = mealCourseChip ? mealCourseChip.dataset.mealtype : '';
+    const mealType = mealCourseValue === 'breakfast' ? 'breakfast' : '';
+    const course = (mealCourseValue === 'side' || mealCourseValue === 'main') ? mealCourseValue : '';
     const ingredients = collectIngredients();
     const steps = collectSteps();
 
@@ -2662,10 +2740,10 @@
     if (editingId){
       const idx = recipes.findIndex(r => r.id === editingId);
       if (idx !== -1){
-        recipes[idx] = { ...recipes[idx], name, time, notes, occasion, mealType, desc, seasons, ingredients, steps };
+        recipes[idx] = { ...recipes[idx], name, time, notes, occasion, mealType, course, desc, seasons, ingredients, steps };
       }
     } else {
-      recipes.push({ id: slugify(name), name, time, notes, occasion, mealType, desc, seasons, ingredients, steps });
+      recipes.push({ id: slugify(name), name, time, notes, occasion, mealType, course, desc, seasons, ingredients, steps });
     }
 
     persistRecipes();
@@ -2821,21 +2899,8 @@
   kitchenInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter'){ e.preventDefault(); addKitchenItem(); }
   });
-  kitchenFilterBtn.addEventListener('click', () => {
-    onlyMakeable = !onlyMakeable;
-    kitchenFilterBtn.classList.toggle('is-active', onlyMakeable);
-    renderCards();
-    refreshFullIfActive();
-  });
-  specialFilterBtn.addEventListener('click', () => {
-    onlySpecial = !onlySpecial;
-    specialFilterBtn.classList.toggle('is-active', onlySpecial);
-    renderCards();
-    refreshFullIfActive();
-  });
-  favFilterBtn.addEventListener('click', () => {
-    onlyFavorites = !onlyFavorites;
-    favFilterBtn.classList.toggle('is-active', onlyFavorites);
+  quickFilterSelect.addEventListener('change', () => {
+    quickFilter = quickFilterSelect.value;
     renderCards();
     refreshFullIfActive();
   });
@@ -3154,11 +3219,15 @@
 
   function renderFullRecipes(){
     const list = visibleRecipes();
-    fullHint.textContent = onlyFavorites
-      ? 'Showing your favorites only.'
-      : onlySpecial
-        ? 'Showing holiday & special-occasion recipes only.'
-        : 'Full ingredients and preparation steps for every recipe matching your current filters.';
+    const QUICK_FILTER_HINTS = {
+      kitchen: `Showing recipes that overlap with what's in your kitchen.`,
+      favorites: 'Showing your favorites only.',
+      special: 'Showing specialty (holiday & special-occasion) recipes only.',
+      side: 'Showing sides only.',
+      main: 'Showing mains only.',
+    };
+    fullHint.textContent = QUICK_FILTER_HINTS[quickFilter]
+      || 'Full ingredients and preparation steps for every recipe matching your current filters.';
 
     if (!list.length){
       fullList.innerHTML = `<p class="rp-weekly-empty">No recipes match the current filters. Adjust the filters on the Recipes page to see more.</p>`;
@@ -3170,7 +3239,7 @@
         <div class="rp-full-card-head">
           <div>
             <h3 class="rp-full-name">${r.name}</h3>
-            <p class="rp-mealtype-row">${MEAL_TYPE_META[effectiveMealType(r)].icon} ${MEAL_TYPE_META[effectiveMealType(r)].label}${r.occasion ? ` · 🎉 ${r.occasion}` : ''}${displayTag(r) ? ` · ${displayTag(r)}` : ''}</p>
+            <p class="rp-mealtype-row">${[browsingBadge(r), r.occasion ? `🎉 ${r.occasion}` : '', displayTag(r)].filter(Boolean).join(' · ')}</p>
           </div>
           <div class="rp-full-card-actions">
             <button type="button" class="rp-star-btn ${r.isFavorite ? 'is-fav' : ''}" data-action="toggle-fav" data-id="${r.id}" aria-label="${r.isFavorite ? 'Remove from favorites' : 'Add to favorites'}">${r.isFavorite ? '★' : '☆'}</button>
@@ -3230,7 +3299,7 @@
       <div style="page-break-inside: avoid; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #DAD5C7;">
         <h2 style="margin:0 0 4px; font-size:20px; font-family: Georgia, 'Times New Roman', serif; color:#1E2A1F;">${r.name}</h2>
         <p style="margin:0 0 10px; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:#5C6B4A; font-family:-apple-system,Helvetica,Arial,sans-serif;">
-          ${MEAL_TYPE_META[effectiveMealType(r)].label}${r.occasion ? ` · ${r.occasion}` : ''}${displayTag(r) ? ` · ${displayTag(r)}` : ''}
+          ${[browsingBadge(r), r.occasion, displayTag(r)].filter(Boolean).join(' · ')}
         </p>
         ${r.desc ? `<p style="margin:0 0 12px; font-size:13px; color:#3a3a34; font-family:-apple-system,Helvetica,Arial,sans-serif;">${r.desc}</p>` : ''}
         <div style="display:flex; gap:28px; flex-wrap:wrap;">
