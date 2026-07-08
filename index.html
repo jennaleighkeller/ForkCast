@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Healthy & Easy Recipes — Meal Planner</title>
-<meta name="description" content="Pick healthy, easy recipes, build a combined shopping list, and plan your week to cut food waste.">
+<title>ForkCast — Meal Planning & Shopping List</title>
+<meta name="description" content="ForkCast: pick recipes, build a combined shopping list, and plan your week ahead to cut food waste.">
 <style>
   html, body {
     margin: 0;
@@ -233,6 +233,24 @@
     height: 2px;
     background: var(--coral);
     border-radius: 2px;
+  }
+
+  .rp-page-hint {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: rgba(247,244,236,0.5);
+    margin: 12px 0 18px;
+  }
+
+  .rp-edit-banner {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--pine);
+    background: var(--coral);
+    border-radius: 8px;
+    padding: 9px 14px;
+    margin: -8px 0 18px;
   }
 
   .rp-weekly-head {
@@ -530,7 +548,12 @@
     display: flex;
     gap: 4px;
   }
-  .rp-confirm-row button {
+  .rp-full-card-actions {
+    display: flex;
+    gap: 4px;
+    flex: none;
+  }
+  .rp-confirm-row button, .rp-full-card-actions .rp-confirm-yes, .rp-full-card-actions .rp-confirm-no {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     font-size: 10.5px;
     font-weight: 600;
@@ -822,6 +845,34 @@
     margin-top: 22px;
   }
 
+  .rp-card-top-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: none;
+  }
+
+  .rp-star-btn {
+    background: none;
+    border: none;
+    color: rgba(247,244,236,0.35);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.15s ease, transform 0.1s ease;
+  }
+  .rp-star-btn:hover {
+    color: rgba(232,185,35,0.7);
+  }
+  .rp-star-btn:active {
+    transform: scale(0.9);
+  }
+  .rp-star-btn.is-fav {
+    color: #E8B923;
+  }
+
   .rp-check {
     width: 20px;
     height: 20px;
@@ -863,7 +914,7 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--sage);
-    margin: 0 0 10px;
+    margin: 0 0 8px;
   }
 
   .rp-desc {
@@ -878,7 +929,7 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     font-size: 11.5px;
     color: rgba(247,244,236,0.45);
-    margin-top: 10px;
+    margin-top: 8px;
   }
 
   .rp-overlap-hint {
@@ -892,7 +943,7 @@
     background: var(--sage);
     border-radius: 8px;
     padding: 7px 10px;
-    margin-top: 10px;
+    margin-top: 8px;
     line-height: 1.35;
   }
 
@@ -900,8 +951,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-top: 12px;
-    padding-top: 10px;
+    margin-top: 10px;
+    padding-top: 8px;
     border-top: 1px solid var(--line);
   }
   .rp-servings-label {
@@ -1092,43 +1143,49 @@
   .rp-clear:hover { color: var(--coral); }
 
   .rp-kitchen {
-    background: rgba(247,244,236,0.05);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 16px 18px;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 4px;
+    padding: 18px 18px 16px;
+    box-shadow: var(--shadow);
     margin-top: 16px;
   }
-  .rp-kitchen-title {
-    margin: 0 0 4px;
-    font-size: 14px;
-    letter-spacing: 0.04em;
+  .rp-kitchen-head {
+    text-align: center;
+    border-bottom: 1px dashed var(--line-soft);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+  .rp-kitchen-head h3 {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-    color: rgba(247,244,236,0.85);
+    color: var(--ink);
   }
-  .rp-kitchen-hint {
-    margin: 0 0 12px;
+  .rp-kitchen-head p {
+    margin: 4px 0 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-    font-size: 11.5px;
-    color: rgba(247,244,236,0.5);
-    line-height: 1.4;
+    font-size: 11px;
+    color: rgba(30,42,31,0.55);
   }
   .rp-kitchen-add-row {
     display: flex;
     gap: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   .rp-kitchen-input {
     flex: 1;
-    background: rgba(247,244,236,0.06);
-    border: 1px solid var(--line);
+    background: rgba(30,42,31,0.05);
+    border: 1px solid var(--line-soft);
     border-radius: 8px;
-    color: var(--paper);
+    color: var(--ink);
     padding: 8px 10px;
     font-size: 13px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
   }
-  .rp-kitchen-input::placeholder { color: rgba(247,244,236,0.4); }
+  .rp-kitchen-input::placeholder { color: rgba(30,42,31,0.35); }
   .rp-kitchen-input:focus { outline: none; border-color: var(--sage); }
   .rp-kitchen-add-btn {
     background: var(--sage);
@@ -1151,27 +1208,27 @@
   .rp-kitchen-empty {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     font-size: 12px;
-    color: rgba(247,244,236,0.4);
+    color: rgba(30,42,31,0.4);
     font-style: italic;
   }
   .rp-kitchen-chip {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: rgba(247,244,236,0.08);
-    border: 1px solid var(--line);
+    background: rgba(143,166,128,0.14);
+    border: 1px solid rgba(143,166,128,0.35);
     border-radius: 999px;
     padding: 5px 6px 5px 12px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     font-size: 12.5px;
-    color: rgba(247,244,236,0.85);
+    color: var(--ink);
   }
   .rp-kitchen-chip button {
     width: 18px; height: 18px;
     border-radius: 50%;
     border: none;
-    background: rgba(247,244,236,0.12);
-    color: rgba(247,244,236,0.7);
+    background: rgba(30,42,31,0.1);
+    color: rgba(30,42,31,0.6);
     cursor: pointer;
     font-size: 10px;
     display: flex;
@@ -1181,7 +1238,7 @@
   }
   .rp-kitchen-chip button:hover {
     background: var(--coral);
-    color: var(--pine);
+    color: var(--paper);
   }
 </style>
 </head>
@@ -1190,8 +1247,8 @@
 <div class="rp-root">
   <div class="rp-header">
     <div>
-      <h1 class="rp-title">Healthy & Easy <span>Recipes</span></h1>
-      <p class="rp-subtitle">Tap a recipe to add its ingredients to your shopping list · tap again to remove it</p>
+      <h1 class="rp-title">Fork<span>Cast</span></h1>
+      <p class="rp-subtitle">Plan your meals, shop smart, waste less · tap a recipe to add it to your list</p>
     </div>
     <div class="rp-header-btns">
       <button class="rp-add-btn" id="rpAddBtn">+ Add recipe</button>
@@ -1202,24 +1259,27 @@
   <p class="rp-drive-status" id="rpDriveStatus" style="display:none;"></p>
 
   <div class="rp-nav" id="rpNav">
-    <button type="button" class="rp-nav-btn is-active" data-page="recipes">Recipes</button>
-    <button type="button" class="rp-nav-btn" data-page="weekly">Weekly Plan</button>
-    <button type="button" class="rp-nav-btn" data-page="full">Full Recipes</button>
+    <button type="button" class="rp-nav-btn is-active" data-page="recipes" title="Pick recipes and build your shopping list">Recipes</button>
+    <button type="button" class="rp-nav-btn" data-page="weekly" title="Arrange your picks across the days of the week">Weekly Plan</button>
+    <button type="button" class="rp-nav-btn" data-page="full" title="See full ingredients and step-by-step instructions to cook">Full Recipes</button>
+  </div>
+  <p class="rp-page-hint" id="rpPageHint">Tap recipes below to add them to your shopping list on the right.</p>
+  <p class="rp-edit-banner" id="rpEditBanner" style="display:none;">✎ Edit mode is on — tap the ✎ or ✕ on any recipe to edit or delete it. Tap "Done editing" when you're finished.</p>
+
+  <div class="rp-filters-row" id="rpFiltersRow">
+    <div class="rp-filters" id="rpFilters"></div>
+    <div class="rp-filters-right">
+      <div class="rp-ing-filter">
+        <input type="text" id="rpIngFilter" placeholder="Filter by ingredient…" class="rp-ing-filter-input">
+        <button type="button" id="rpIngFilterClear" class="rp-ing-filter-clear" style="display:none;" aria-label="Clear ingredient filter">✕</button>
+      </div>
+      <button type="button" class="rp-filter-btn rp-kitchen-filter-btn" id="rpKitchenFilterBtn">🧺 Uses what's in my kitchen</button>
+      <button type="button" class="rp-filter-btn rp-kitchen-filter-btn" id="rpSpecialFilterBtn">🎉 Holiday &amp; special occasions</button>
+        <button type="button" class="rp-filter-btn rp-kitchen-filter-btn" id="rpFavFilterBtn">★ Favorites</button>
+    </div>
   </div>
 
   <div id="rpPageRecipes">
-    <div class="rp-filters-row">
-      <div class="rp-filters" id="rpFilters"></div>
-      <div class="rp-filters-right">
-        <div class="rp-ing-filter">
-          <input type="text" id="rpIngFilter" placeholder="Filter by ingredient…" class="rp-ing-filter-input">
-          <button type="button" id="rpIngFilterClear" class="rp-ing-filter-clear" style="display:none;" aria-label="Clear ingredient filter">✕</button>
-        </div>
-        <button type="button" class="rp-filter-btn rp-kitchen-filter-btn" id="rpKitchenFilterBtn">🧺 Uses what's in my kitchen</button>
-        <button type="button" class="rp-filter-btn rp-kitchen-filter-btn" id="rpSpecialFilterBtn">🎉 Holiday &amp; special occasions</button>
-      </div>
-    </div>
-
     <div class="rp-layout">
       <div class="rp-grid" id="rpGrid"></div>
 
@@ -1242,8 +1302,10 @@
         </div>
 
         <div class="rp-kitchen">
-          <h3 class="rp-kitchen-title">In My Kitchen</h3>
-          <p class="rp-kitchen-hint">Anything listed here is left off your shopping list automatically, and you can filter recipes by it below.</p>
+          <div class="rp-kitchen-head">
+            <h3>🧺 In My Kitchen</h3>
+            <p>Left off your shopping list automatically · filter recipes by it above</p>
+          </div>
           <div class="rp-kitchen-add-row">
             <input type="text" id="rpKitchenInput" class="rp-kitchen-input" placeholder="e.g. olive oil">
             <button type="button" id="rpKitchenAddBtn" class="rp-kitchen-add-btn">Add</button>
@@ -1256,9 +1318,10 @@
 
   <div id="rpPageWeekly" style="display:none;">
     <div class="rp-weekly-head">
-      <p class="rp-weekly-hint">Built from your shopping list picks, repeated if needed to fill every slot · <span class="rp-dot rp-dot-high"></span> quick to spoil, cook early · <span class="rp-dot rp-dot-low"></span> keeps well, fine for later</p>
+      <p class="rp-weekly-hint">Auto-generate sorts by <span class="rp-dot rp-dot-high"></span> quick-to-spoil first, <span class="rp-dot rp-dot-low"></span> keeps-well later, matches breakfast/lunch/dinner, and repeats meal-prep recipes as next-day leftovers — repeating recipes too if you don't have enough to fill every slot.</p>
       <div class="rp-weekly-head-btns">
         <button type="button" id="rpAutoArrangeBtn" class="rp-filter-btn">🔄 Auto-generate my week</button>
+        <button type="button" id="rpUndoArrangeBtn" class="rp-filter-btn" style="display:none;">↩️ Undo</button>
         <button type="button" id="rpExportImgBtn" class="rp-filter-btn">📷 Export as image</button>
       </div>
     </div>
@@ -1268,8 +1331,12 @@
   <div id="rpPageFull" style="display:none;">
     <div class="rp-weekly-head">
       <p class="rp-weekly-hint" id="rpFullHint">Full ingredients and preparation steps for every recipe matching your current filters.</p>
-      <button type="button" id="rpExportPdfBtn" class="rp-filter-btn">📄 Export as PDF</button>
+      <div class="rp-weekly-head-btns">
+        <button type="button" id="rpExportPdfBtn" class="rp-filter-btn">📄 Export as PDF</button>
+        <button type="button" id="rpExportDriveBtn" class="rp-filter-btn">📤 Export to Google Drive</button>
+      </div>
     </div>
+    <p class="rp-drive-status" id="rpDriveExportStatus" style="display:none;"></p>
     <div class="rp-full-list" id="rpFullList"></div>
   </div>
 
@@ -1333,7 +1400,8 @@
       </div>
 
       <label class="rp-form-label">Occasion (optional — e.g. Christmas, Thanksgiving, Birthday)
-        <input type="text" class="rp-form-input" id="rpFormOccasion" placeholder="Leave blank for an everyday recipe">
+        <input type="text" class="rp-form-input" id="rpFormOccasion" list="rpOccasionSuggestions" placeholder="Leave blank for an everyday recipe">
+        <datalist id="rpOccasionSuggestions"></datalist>
       </label>
 
       <div class="rp-form-label">Ingredients
@@ -1643,7 +1711,7 @@
   // Stores everything in one hidden JSON file in the signed-in user's Drive
   // "app data" folder (invisible in their normal Drive, only this app can see it).
   const GOOGLE_CLIENT_ID = "40599220195-f8qq7u3elanskjfcfq1oi7aspcgc4m08.apps.googleusercontent.com";
-  const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.appdata";
+  const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file";
   const DRIVE_FILE_NAME = "meal-planner-data.json";
 
   let driveAccessToken = null;
@@ -1708,6 +1776,97 @@
     if (!driveFileId) driveFileId = json.id;
   }
 
+  // Creates a normal, visible Google Doc (not hidden app data) in the user's
+  // "My Drive", converted from HTML so it opens as an editable, readable doc.
+  async function createVisibleDriveDoc(name, html){
+    const metadata = { name, mimeType: 'application/vnd.google-apps.document' };
+    const boundary = 'rpdocboundary' + Date.now();
+    const body =
+      `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n` +
+      `--${boundary}\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n${html}\r\n` +
+      `--${boundary}--`;
+    const res = await driveFetch(`https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink`, {
+      method: 'POST',
+      headers: { 'Content-Type': `multipart/related; boundary=${boundary}` },
+      body,
+    });
+    return res.json();
+  }
+
+  function setDriveExportStatus(text, isError){
+    driveExportStatusEl.textContent = text;
+    driveExportStatusEl.style.display = text ? 'block' : 'none';
+    driveExportStatusEl.classList.toggle('is-error', !!isError);
+  }
+
+  function buildRecipeBookHtml(){
+    const seasonSections = SEASONS.map(s => {
+      const matches = recipes.filter(r => r.seasons.includes(s.id));
+      return `
+        <h3>${s.label}</h3>
+        ${matches.length
+          ? `<ul>${matches.map(r => `<li>${r.name}${displayTag(r) ? ` — ${displayTag(r)}` : ''}</li>`).join('')}</ul>`
+          : `<p><em>No recipes tagged for ${s.label.toLowerCase()} yet.</em></p>`}
+      `;
+    }).join('');
+
+    const occasions = Array.from(new Set(
+      recipes.filter(r => r.occasion && r.occasion.trim()).map(r => r.occasion.trim())
+    )).sort();
+    const occasionSections = occasions.length
+      ? occasions.map(occ => {
+          const matches = recipes.filter(r => (r.occasion || '').trim() === occ);
+          return `<h3>${occ}</h3><ul>${matches.map(r => `<li>${r.name}</li>`).join('')}</ul>`;
+        }).join('')
+      : '<p><em>No holiday or special-occasion recipes added yet.</em></p>';
+
+    const fullSections = recipes.map(r => `
+      <h3>${r.name}</h3>
+      <p><em>${MEAL_TYPE_META[effectiveMealType(r)].label}${r.occasion ? ` · ${r.occasion}` : ''}${displayTag(r) ? ` · ${displayTag(r)}` : ''}</em></p>
+      ${r.desc ? `<p>${r.desc}</p>` : ''}
+      <p><strong>Ingredients (serves 2)</strong></p>
+      <ul>${r.ingredients.map(ing => `<li>${ing.n}${ing.a !== undefined ? ` — ${fmtAmt(ing.a, ing.u)}` : ''}</li>`).join('')}</ul>
+      <p><strong>Preparation</strong></p>
+      ${r.steps && r.steps.length
+        ? `<ol>${r.steps.map(s => `<li>${s}</li>`).join('')}</ol>`
+        : `<p><em>No steps added.</em></p>`}
+      <hr>
+    `).join('');
+
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Recipe Book</title></head><body>
+      <h1>Recipe Book</h1>
+      <p>Exported from ForkCast</p>
+      <h2>By Season</h2>
+      ${seasonSections}
+      <h2>By Holiday &amp; Special Occasion</h2>
+      ${occasionSections}
+      <h2>All Recipes — Full Details</h2>
+      ${fullSections}
+    </body></html>`;
+  }
+
+  async function handleExportToDrive(){
+    if (!driveAccessToken){
+      setDriveExportStatus('Sign in with Google (top of the page) first, then try exporting again.', true);
+      return;
+    }
+    const original = exportDriveBtn.textContent;
+    exportDriveBtn.textContent = 'Exporting…';
+    exportDriveBtn.disabled = true;
+    setDriveExportStatus('Creating your recipe book in Google Drive…');
+    try {
+      const html = buildRecipeBookHtml();
+      const result = await createVisibleDriveDoc('ForkCast — Recipe Book', html);
+      setDriveExportStatus('Saved to your Google Drive as a Google Doc.');
+      if (result && result.webViewLink) window.open(result.webViewLink, '_blank');
+    } catch (err){
+      console.error('Drive export failed:', err);
+      setDriveExportStatus('Could not export to Drive. If you signed in before this feature was added, sign out and sign back in to grant the extra permission, then try again.', true);
+    }
+    exportDriveBtn.textContent = original;
+    exportDriveBtn.disabled = false;
+  }
+
   function scheduleDriveSave(){
     clearTimeout(driveSaveTimer);
     driveSaveTimer = setTimeout(() => {
@@ -1750,8 +1909,10 @@
   async function initDriveAfterSignIn(){
     setDriveStatus('Connecting to Google Drive…');
     driveFileId = await findDriveFile();
+    let statusMsg;
     if (driveFileId){
       driveCache = await readDriveFile(driveFileId);
+      statusMsg = 'Loaded your synced data from Google Drive. Note: anything added only in this browser before signing in, and not yet synced elsewhere, won\'t be included — it\'s replaced by what\'s in Drive.';
     } else {
       // First time signing in — seed Drive with whatever's already saved in this browser
       driveCache = {};
@@ -1760,12 +1921,13 @@
         if (v !== null) driveCache[k] = v;
       });
       await writeDriveFile(driveCache);
+      statusMsg = 'Synced with Google Drive — everything already saved in this browser has been copied there.';
     }
     store = driveStore;
     await refreshAllFromStore();
     driveBtn.textContent = '☁️ Signed in — Sign out';
     driveBtn.classList.add('is-active');
-    setDriveStatus('Synced with Google Drive.');
+    setDriveStatus(statusMsg);
   }
 
   async function handleDriveSignIn(){
@@ -1818,6 +1980,7 @@
     if (r.mealType === undefined) r.mealType = '';
     if (r.steps === undefined) r.steps = [];
     if (r.occasion === undefined) r.occasion = '';
+    if (r.isFavorite === undefined) r.isFavorite = false;
     return r;
   }
 
@@ -1835,12 +1998,14 @@
   let ingredientFilter = ""; // lowercase substring to match against ingredient names
   let onlyMakeable = false; // whether to filter to recipes fully covered by kitchen items
   let onlySpecial = false; // whether to filter to recipes tagged with an occasion (holiday/special)
+  let onlyFavorites = false; // whether to filter to starred/favorite recipes only
   let kitchenItems = []; // array of strings the user says they already have
   let editingId = null; // id of recipe being edited, or null when adding
   let confirmingDeleteId = null; // id currently showing "confirm delete?"
   let manageMode = false; // whether edit/delete controls are visible on cards
   let ingRowSeq = 0;
   let weeklyPlan = {}; // { mon: {breakfast:recipeId|null, lunch:..., dinner:...}, tue: {...}, ... }
+  let weeklyPlanUndoSnapshot = null; // snapshot taken right before auto-generate, for the Undo button
   const DAYS = [
     {id:"mon", label:"Mon"}, {id:"tue", label:"Tue"}, {id:"wed", label:"Wed"},
     {id:"thu", label:"Thu"}, {id:"fri", label:"Fri"}, {id:"sat", label:"Sat"}, {id:"sun", label:"Sun"},
@@ -1872,6 +2037,7 @@
   const formSeasons = document.getElementById('rpFormSeasons');
   const formMealType = document.getElementById('rpFormMealType');
   const formOccasion = document.getElementById('rpFormOccasion');
+  const occasionSuggestions = document.getElementById('rpOccasionSuggestions');
   const formIngList = document.getElementById('rpFormIngList');
   const addIngBtn = document.getElementById('rpAddIngBtn');
   const formStepList = document.getElementById('rpFormStepList');
@@ -1881,19 +2047,31 @@
   const formErr = document.getElementById('rpFormErr');
   const kitchenFilterBtn = document.getElementById('rpKitchenFilterBtn');
   const specialFilterBtn = document.getElementById('rpSpecialFilterBtn');
+  const favFilterBtn = document.getElementById('rpFavFilterBtn');
   const kitchenInput = document.getElementById('rpKitchenInput');
   const kitchenAddBtn = document.getElementById('rpKitchenAddBtn');
   const kitchenListEl = document.getElementById('rpKitchenList');
   const navEl = document.getElementById('rpNav');
+  const filtersRow = document.getElementById('rpFiltersRow');
+  const pageHint = document.getElementById('rpPageHint');
+  const editBanner = document.getElementById('rpEditBanner');
+  let currentPage = 'recipes';
+
+  function updateEditBanner(){
+    editBanner.style.display = (manageMode && currentPage !== 'weekly') ? 'block' : 'none';
+  }
   const pageRecipes = document.getElementById('rpPageRecipes');
   const pageWeekly = document.getElementById('rpPageWeekly');
   const pageFull = document.getElementById('rpPageFull');
   const fullList = document.getElementById('rpFullList');
   const fullHint = document.getElementById('rpFullHint');
   const exportPdfBtn = document.getElementById('rpExportPdfBtn');
+  const exportDriveBtn = document.getElementById('rpExportDriveBtn');
+  const driveExportStatusEl = document.getElementById('rpDriveExportStatus');
   const printArea = document.getElementById('rpPrintArea');
   const weekGrid = document.getElementById('rpWeekGrid');
   const autoArrangeBtn = document.getElementById('rpAutoArrangeBtn');
+  const undoArrangeBtn = document.getElementById('rpUndoArrangeBtn');
   const exportImgBtn = document.getElementById('rpExportImgBtn');
   const exportCard = document.getElementById('rpExportCard');
   const viewOverlay = document.getElementById('rpViewOverlay');
@@ -1997,6 +2175,10 @@
     return u ? `${num} ${u}` : `${num}×`;
   }
 
+  function refreshFullIfActive(){
+    if (pageFull && pageFull.style.display !== 'none') renderFullRecipes();
+  }
+
   function renderFilters(){
     const allBtn = `
       <button class="rp-filter-btn ${activeSeason === 'all' ? 'is-active' : ''}" data-season="all">
@@ -2014,6 +2196,7 @@
         activeSeason = btn.dataset.season;
         renderFilters();
         renderCards();
+        refreshFullIfActive();
       });
     });
   }
@@ -2165,6 +2348,9 @@
     if (onlySpecial) {
       list = list.filter(r => r.occasion && r.occasion.trim());
     }
+    if (onlyFavorites) {
+      list = list.filter(r => r.isFavorite);
+    }
     return list;
   }
 
@@ -2175,6 +2361,7 @@
       let msg = 'No recipes tagged for this season yet.';
       if (onlyMakeable) msg = kitchenItems.length ? `No recipes overlap with what's in your kitchen yet.` : `Add a few ingredients to "In My Kitchen" first.`;
       else if (onlySpecial) msg = `No holiday or special-occasion recipes yet — add one and set its "Occasion" field.`;
+      else if (onlyFavorites) msg = `No favorites yet — tap the ☆ on a recipe to star it.`;
       else if (ingredientFilter) msg = `No recipes with "${ingredientFilter}" for this season.`;
       grid.innerHTML = `<p class="rp-no-match">${msg}</p>`;
       return;
@@ -2208,7 +2395,10 @@
             ${displayTag(r) ? `<p class="rp-tag-row">${displayTag(r)}</p>` : ''}
             <p class="rp-mealtype-row">${MEAL_TYPE_META[effectiveMealType(r)].icon} ${MEAL_TYPE_META[effectiveMealType(r)].label}${r.occasion ? ` · 🎉 ${r.occasion}` : ''}</p>
           </div>
-          <div class="rp-check">${isPicked ? '✓' : ''}</div>
+          <div class="rp-card-top-right">
+            <button type="button" class="rp-star-btn ${r.isFavorite ? 'is-fav' : ''}" data-action="toggle-fav" data-id="${r.id}" aria-label="${r.isFavorite ? 'Remove from favorites' : 'Add to favorites'}">${r.isFavorite ? '★' : '☆'}</button>
+            <div class="rp-check">${isPicked ? '✓' : ''}</div>
+          </div>
         </div>
         <p class="rp-desc">${r.desc || ''}</p>
         <p class="rp-meta">${r.ingredients.length} ingredient${r.ingredients.length !== 1 ? 's' : ''}${kitchenItems.length ? ` · ${matchedIngredientCount(r)} of ${r.ingredients.length} in your kitchen` : ''}</p>
@@ -2233,6 +2423,13 @@
       card.addEventListener('keydown', (e) => {
         if (e.target.closest('[data-action]')) return;
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleRecipe(card.dataset.id); }
+      });
+    });
+
+    grid.querySelectorAll('[data-action="toggle-fav"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleFavorite(btn.dataset.id);
       });
     });
 
@@ -2277,6 +2474,15 @@
     });
   }
 
+  function toggleFavorite(id){
+    const r = recipes.find(x => x.id === id);
+    if (!r) return;
+    r.isFavorite = !r.isFavorite;
+    persistRecipes();
+    renderCards();
+    refreshFullIfActive();
+  }
+
   function deleteRecipe(id){
     recipes = recipes.filter(r => r.id !== id);
     picked.delete(id);
@@ -2287,6 +2493,7 @@
     renderCards();
     renderList();
     renderWeekly();
+    refreshFullIfActive();
   }
 
   function slugify(name){
@@ -2377,6 +2584,8 @@
     formTime.value = recipe ? (recipe.time || '') : '';
     formNotes.value = recipe ? (recipe.notes || '') : '';
     formOccasion.value = recipe ? (recipe.occasion || '') : '';
+    const existingOccasions = Array.from(new Set(recipes.filter(r => r.occasion && r.occasion.trim()).map(r => r.occasion.trim()))).sort();
+    occasionSuggestions.innerHTML = existingOccasions.map(o => `<option value="${o}">`).join('');
     formDesc.value = recipe ? (recipe.desc || '') : '';
     formErr.style.display = 'none';
     formErr.textContent = '';
@@ -2463,6 +2672,7 @@
     closeForm();
     renderCards();
     renderList();
+    refreshFullIfActive();
   }
 
   addBtn.addEventListener('click', () => openForm(null));
@@ -2472,6 +2682,8 @@
     manageBtn.textContent = manageMode ? 'Done editing' : 'Edit recipe';
     manageBtn.classList.toggle('is-active', manageMode);
     renderCards();
+    refreshFullIfActive();
+    updateEditBanner();
   });
   driveBtn.addEventListener('click', () => {
     if (driveAccessToken) handleDriveSignOut();
@@ -2613,12 +2825,19 @@
     onlyMakeable = !onlyMakeable;
     kitchenFilterBtn.classList.toggle('is-active', onlyMakeable);
     renderCards();
+    refreshFullIfActive();
   });
   specialFilterBtn.addEventListener('click', () => {
     onlySpecial = !onlySpecial;
     specialFilterBtn.classList.toggle('is-active', onlySpecial);
     renderCards();
-    if (pageFull && pageFull.style.display !== 'none') renderFullRecipes();
+    refreshFullIfActive();
+  });
+  favFilterBtn.addEventListener('click', () => {
+    onlyFavorites = !onlyFavorites;
+    favFilterBtn.classList.toggle('is-active', onlyFavorites);
+    renderCards();
+    refreshFullIfActive();
   });
 
   clearBtn.addEventListener('click', () => {
@@ -2635,12 +2854,14 @@
     ingredientFilter = ingFilterInput.value.trim().toLowerCase();
     ingFilterClear.style.display = ingredientFilter ? 'block' : 'none';
     renderCards();
+    refreshFullIfActive();
   });
   ingFilterClear.addEventListener('click', () => {
     ingFilterInput.value = '';
     ingredientFilter = '';
     ingFilterClear.style.display = 'none';
     renderCards();
+    refreshFullIfActive();
     ingFilterInput.focus();
   });
 
@@ -2733,6 +2954,7 @@
   function autoArrangeWeek(){
     const pickedRecipes = recipes.filter(r => picked.has(r.id));
     if (!pickedRecipes.length) return;
+    weeklyPlanUndoSnapshot = JSON.parse(JSON.stringify(weeklyPlan));
     resetWeeklyPlan();
 
     // Group by which meal of the day each recipe suits best
@@ -2807,9 +3029,18 @@
 
     persistWeeklyPlan();
     renderWeekly();
+    undoArrangeBtn.style.display = '';
   }
 
   autoArrangeBtn.addEventListener('click', autoArrangeWeek);
+  undoArrangeBtn.addEventListener('click', () => {
+    if (!weeklyPlanUndoSnapshot) return;
+    weeklyPlan = weeklyPlanUndoSnapshot;
+    weeklyPlanUndoSnapshot = null;
+    persistWeeklyPlan();
+    renderWeekly();
+    undoArrangeBtn.style.display = 'none';
+  });
 
   function openViewModal(recipeId){
     const r = recipes.find(x => x.id === recipeId);
@@ -2883,7 +3114,7 @@
       <div style="background:#F7F4EC; padding:36px 40px; width:960px; font-family:${sans};">
         <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:6px;">
           <h1 style="margin:0; font-size:26px; font-weight:600; letter-spacing:0.01em; color:#1E2A1F; font-family:${serif};">Weekly Meal Plan</h1>
-          <span style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color:#9A9488;">Healthy &amp; Easy Recipes</span>
+          <span style="font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color:#9A9488;">ForkCast</span>
         </div>
         <div style="height:1px; background:#DAD5C7; margin:14px 0 22px;"></div>
         <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:12px;">
@@ -2923,9 +3154,11 @@
 
   function renderFullRecipes(){
     const list = visibleRecipes();
-    fullHint.textContent = onlySpecial
-      ? 'Showing holiday & special-occasion recipes only.'
-      : 'Full ingredients and preparation steps for every recipe matching your current filters.';
+    fullHint.textContent = onlyFavorites
+      ? 'Showing your favorites only.'
+      : onlySpecial
+        ? 'Showing holiday & special-occasion recipes only.'
+        : 'Full ingredients and preparation steps for every recipe matching your current filters.';
 
     if (!list.length){
       fullList.innerHTML = `<p class="rp-weekly-empty">No recipes match the current filters. Adjust the filters on the Recipes page to see more.</p>`;
@@ -2938,6 +3171,16 @@
           <div>
             <h3 class="rp-full-name">${r.name}</h3>
             <p class="rp-mealtype-row">${MEAL_TYPE_META[effectiveMealType(r)].icon} ${MEAL_TYPE_META[effectiveMealType(r)].label}${r.occasion ? ` · 🎉 ${r.occasion}` : ''}${displayTag(r) ? ` · ${displayTag(r)}` : ''}</p>
+          </div>
+          <div class="rp-full-card-actions">
+            <button type="button" class="rp-star-btn ${r.isFavorite ? 'is-fav' : ''}" data-action="toggle-fav" data-id="${r.id}" aria-label="${r.isFavorite ? 'Remove from favorites' : 'Add to favorites'}">${r.isFavorite ? '★' : '☆'}</button>
+            ${manageMode ? (confirmingDeleteId === r.id ? `
+              <button type="button" class="rp-confirm-yes" data-action="confirm-delete" data-id="${r.id}">Delete</button>
+              <button type="button" class="rp-confirm-no" data-action="cancel-delete" data-id="${r.id}">Keep</button>
+            ` : `
+              <button type="button" class="rp-icon-btn rp-icon-edit" data-action="edit" data-id="${r.id}" aria-label="Edit recipe">✎</button>
+              <button type="button" class="rp-icon-btn rp-icon-delete" data-action="delete" data-id="${r.id}" aria-label="Delete recipe">✕</button>
+            `) : ''}
           </div>
         </div>
         <p class="rp-desc">${r.desc || ''}</p>
@@ -2957,6 +3200,28 @@
         </div>
       </div>
     `).join('');
+
+    fullList.querySelectorAll('[data-action="toggle-fav"]').forEach(btn => {
+      btn.addEventListener('click', () => toggleFavorite(btn.dataset.id));
+    });
+    fullList.querySelectorAll('[data-action="edit"]').forEach(btn => {
+      btn.addEventListener('click', () => openForm(recipes.find(r => r.id === btn.dataset.id)));
+    });
+    fullList.querySelectorAll('[data-action="delete"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        confirmingDeleteId = btn.dataset.id;
+        renderFullRecipes();
+      });
+    });
+    fullList.querySelectorAll('[data-action="confirm-delete"]').forEach(btn => {
+      btn.addEventListener('click', () => deleteRecipe(btn.dataset.id));
+    });
+    fullList.querySelectorAll('[data-action="cancel-delete"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        confirmingDeleteId = null;
+        renderFullRecipes();
+      });
+    });
   }
 
   function buildPrintArea(){
@@ -2988,7 +3253,7 @@
     printArea.innerHTML = `
       <div style="background:#fff; padding:20px;">
         <h1 style="margin:0 0 4px; font-size:24px; font-family: Georgia, 'Times New Roman', serif; color:#1E2A1F;">Recipe Book</h1>
-        <p style="margin:0 0 20px; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:#9A9488; font-family:-apple-system,Helvetica,Arial,sans-serif;">Healthy &amp; Easy Recipes</p>
+        <p style="margin:0 0 20px; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:#9A9488; font-family:-apple-system,Helvetica,Arial,sans-serif;">ForkCast</p>
         ${cards}
       </div>
     `;
@@ -2999,14 +3264,26 @@
     window.print();
   });
 
+  exportDriveBtn.addEventListener('click', handleExportToDrive);
+
+  const PAGE_HINTS = {
+    recipes: 'Tap recipes below to add them to your shopping list on the right.',
+    weekly: 'Assign your picked recipes to days and meals — or let auto-generate arrange them by freshness.',
+    full: 'The same recipes, with full ingredients and step-by-step instructions for actually cooking them.',
+  };
+
   navEl.querySelectorAll('.rp-nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       navEl.querySelectorAll('.rp-nav-btn').forEach(b => b.classList.remove('is-active'));
       btn.classList.add('is-active');
       const page = btn.dataset.page;
+      currentPage = page;
       pageRecipes.style.display = page === 'recipes' ? 'block' : 'none';
       pageWeekly.style.display = page === 'weekly' ? 'block' : 'none';
       pageFull.style.display = page === 'full' ? 'block' : 'none';
+      filtersRow.style.display = page === 'weekly' ? 'none' : 'flex';
+      pageHint.textContent = PAGE_HINTS[page] || '';
+      updateEditBanner();
       if (page === 'weekly') renderWeekly();
       if (page === 'full') renderFullRecipes();
     });
