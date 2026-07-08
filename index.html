@@ -348,6 +348,112 @@
     padding: 24px 4px;
   }
 
+  .rp-full-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .rp-full-card {
+    background: rgba(247,244,236,0.05);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .rp-full-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+  .rp-full-name {
+    font-size: 19px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .rp-full-cols {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+    margin-top: 14px;
+  }
+  @media (max-width: 700px) {
+    .rp-full-cols { grid-template-columns: 1fr; }
+  }
+  .rp-full-section-title {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sage);
+    margin: 0 0 8px;
+  }
+  .rp-full-ing-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .rp-full-ing-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: rgba(247,244,236,0.85);
+  }
+  .rp-full-ing-list li span {
+    color: rgba(247,244,236,0.5);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .rp-full-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: rp-step;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .rp-full-steps li {
+    counter-increment: rp-step;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: rgba(247,244,236,0.85);
+    display: flex;
+    gap: 10px;
+  }
+  .rp-full-steps li::before {
+    content: counter(rp-step) ".";
+    font-weight: 700;
+    color: var(--sage);
+    flex: none;
+  }
+  .rp-full-no-steps {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 12.5px;
+    color: rgba(247,244,236,0.4);
+    font-style: italic;
+  }
+
+  /* Print-only content: hidden on screen, shown (and everything else hidden) when printing */
+  .rp-print-area { display: none; }
+  @media print {
+    body * { visibility: hidden; }
+    .rp-print-area, .rp-print-area * { visibility: visible; }
+    .rp-print-area {
+      display: block !important;
+      position: absolute;
+      left: 0; top: 0;
+      width: 100%;
+    }
+  }
+
   .rp-add-btn {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     font-size: 13px;
@@ -570,6 +676,51 @@
     width: 100%;
   }
   .rp-add-ing-btn:hover { border-color: var(--sage); color: var(--paper); }
+
+  .rp-form-step-list {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rp-step-row {
+    display: grid;
+    grid-template-columns: 22px 1fr 26px;
+    gap: 8px;
+    align-items: start;
+  }
+  .rp-step-num {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--sage);
+    padding-top: 8px;
+    text-align: right;
+  }
+  .rp-step-row textarea {
+    background: rgba(247,244,236,0.06);
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    color: var(--paper);
+    padding: 7px 8px;
+    font-size: 13px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    width: 100%;
+    resize: vertical;
+    min-height: 36px;
+  }
+  .rp-step-row textarea:focus { outline: none; border-color: var(--sage); }
+  .rp-step-remove {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: rgba(247,244,236,0.6);
+    cursor: pointer;
+    font-size: 13px;
+    margin-top: 2px;
+  }
+  .rp-step-remove:hover { border-color: var(--coral); color: var(--coral); }
 
   .rp-form-err {
     color: var(--coral);
@@ -1053,6 +1204,7 @@
   <div class="rp-nav" id="rpNav">
     <button type="button" class="rp-nav-btn is-active" data-page="recipes">Recipes</button>
     <button type="button" class="rp-nav-btn" data-page="weekly">Weekly Plan</button>
+    <button type="button" class="rp-nav-btn" data-page="full">Full Recipes</button>
   </div>
 
   <div id="rpPageRecipes">
@@ -1064,6 +1216,7 @@
           <button type="button" id="rpIngFilterClear" class="rp-ing-filter-clear" style="display:none;" aria-label="Clear ingredient filter">✕</button>
         </div>
         <button type="button" class="rp-filter-btn rp-kitchen-filter-btn" id="rpKitchenFilterBtn">🧺 Uses what's in my kitchen</button>
+        <button type="button" class="rp-filter-btn rp-kitchen-filter-btn" id="rpSpecialFilterBtn">🎉 Holiday &amp; special occasions</button>
       </div>
     </div>
 
@@ -1112,6 +1265,16 @@
     <div class="rp-week-grid" id="rpWeekGrid"></div>
   </div>
 
+  <div id="rpPageFull" style="display:none;">
+    <div class="rp-weekly-head">
+      <p class="rp-weekly-hint" id="rpFullHint">Full ingredients and preparation steps for every recipe matching your current filters.</p>
+      <button type="button" id="rpExportPdfBtn" class="rp-filter-btn">📄 Export as PDF</button>
+    </div>
+    <div class="rp-full-list" id="rpFullList"></div>
+  </div>
+
+  <div id="rpPrintArea" class="rp-print-area"></div>
+
   <div class="rp-modal-overlay" id="rpViewOverlay" style="display:none;">
     <div class="rp-modal rp-view-modal" role="dialog" aria-modal="true">
       <h2 class="rp-modal-title" id="rpViewTitle"></h2>
@@ -1119,6 +1282,9 @@
       <p class="rp-desc rp-view-desc" id="rpViewDesc"></p>
       <div class="rp-form-label">Ingredients
         <div id="rpViewIngredients"></div>
+      </div>
+      <div class="rp-form-label" id="rpViewStepsWrap" style="display:none;">Preparation
+        <div id="rpViewSteps"></div>
       </div>
       <div class="rp-modal-actions">
         <button type="button" class="rp-modal-cancel" id="rpViewClose">Close</button>
@@ -1166,9 +1332,18 @@
         <div class="rp-form-seasons" id="rpFormMealType"></div>
       </div>
 
+      <label class="rp-form-label">Occasion (optional — e.g. Christmas, Thanksgiving, Birthday)
+        <input type="text" class="rp-form-input" id="rpFormOccasion" placeholder="Leave blank for an everyday recipe">
+      </label>
+
       <div class="rp-form-label">Ingredients
         <div class="rp-form-ing-list" id="rpFormIngList"></div>
         <button type="button" class="rp-add-ing-btn" id="rpAddIngBtn">+ Add ingredient</button>
+      </div>
+
+      <div class="rp-form-label">Preparation steps
+        <div class="rp-form-step-list" id="rpFormStepList"></div>
+        <button type="button" class="rp-add-ing-btn" id="rpAddStepBtn">+ Add step</button>
       </div>
 
       <p class="rp-form-err" id="rpFormErr" style="display:none;"></p>
@@ -1198,6 +1373,11 @@
         {n:"mixed berries", a:200, u:"g"},
         {n:"honey", a:2, u:"tbsp"},
         {n:"walnuts", a:40, u:"g"},
+      ],
+      steps: [
+        "Divide the Greek yogurt between two bowls.",
+        "Top each bowl with mixed berries and chopped walnuts.",
+        "Drizzle with honey and serve right away.",
       ]
     },
     {
@@ -1214,6 +1394,13 @@
         {n:"chia seeds", a:2, u:"tbsp"},
         {n:"banana", a:2},
         {n:"cinnamon", a:2, u:"pinch"},
+      ],
+      steps: [
+        "Slice the bananas and divide between two jars or containers.",
+        "Add the rolled oats, chia seeds, and cinnamon on top.",
+        "Pour in the milk and stir well to combine.",
+        "Cover and refrigerate overnight (at least 6 hours).",
+        "Stir again before eating; add extra milk if it's too thick.",
       ]
     },
     {
@@ -1230,6 +1417,14 @@
         {n:"spinach", a:60, u:"g"},
         {n:"feta cheese", a:50, u:"g"},
         {n:"olive oil", a:1, u:"tbsp"},
+      ],
+      steps: [
+        "Dice the bell pepper and crumble the feta.",
+        "Whisk the eggs in a bowl with a pinch of salt and pepper.",
+        "Heat the olive oil in a nonstick pan over medium heat.",
+        "Add the bell pepper and cook for 2 minutes, then add the spinach until wilted.",
+        "Pour in the eggs, sprinkle the feta on top, and cook until just set.",
+        "Fold in half and slide onto a plate to serve.",
       ]
     },
     {
@@ -1246,6 +1441,12 @@
         {n:"fresh basil", a:1, u:"handful"},
         {n:"olive oil", a:2, u:"tbsp"},
         {n:"balsamic vinegar", a:1, u:"tbsp"},
+      ],
+      steps: [
+        "Slice the tomatoes and mozzarella into rounds of similar thickness.",
+        "Arrange them alternating on a plate, tucking basil leaves between slices.",
+        "Drizzle with olive oil and balsamic vinegar.",
+        "Season with salt and pepper and serve immediately.",
       ]
     },
     {
@@ -1263,6 +1464,13 @@
         {n:"fresh parsley", a:1, u:"bunch"},
         {n:"lemon", a:1},
         {n:"olive oil", a:2, u:"tbsp"},
+      ],
+      steps: [
+        "Rinse the quinoa, then cook according to package directions and let it cool.",
+        "Dice the cucumber and tomatoes; finely chop the parsley.",
+        "Combine the cooled quinoa with the vegetables and parsley in a bowl.",
+        "Squeeze the lemon over the top and drizzle with olive oil.",
+        "Season with salt and pepper, toss well, and serve chilled or at room temperature.",
       ]
     },
     {
@@ -1280,6 +1488,14 @@
         {n:"tahini", a:2, u:"tbsp"},
         {n:"lemon", a:1},
         {n:"cumin", a:1, u:"tsp"},
+      ],
+      steps: [
+        "Preheat the oven to 200°C (400°F).",
+        "Cube the sweet potato and drain and rinse the chickpeas.",
+        "Toss the sweet potato and chickpeas with the cumin and a little olive oil.",
+        "Roast for 20–25 minutes, until the sweet potato is tender and the chickpeas are crisp.",
+        "Whisk the tahini with lemon juice and a splash of water to make a dressing.",
+        "Divide the mixed greens between two bowls, top with the roasted mix, and drizzle with the tahini dressing.",
       ]
     },
     {
@@ -1297,6 +1513,14 @@
         {n:"vegetable broth", a:750, u:"ml"},
         {n:"cumin", a:1, u:"tsp"},
         {n:"garlic cloves", a:2},
+      ],
+      steps: [
+        "Dice the onion and carrots, and mince the garlic.",
+        "Sauté the onion and garlic in a pot until soft, about 3 minutes.",
+        "Add the carrots and cumin, and cook for another 2 minutes.",
+        "Rinse the lentils, then add them and the vegetable broth to the pot.",
+        "Bring to a boil, then reduce heat and simmer for 20 minutes, until the lentils are soft.",
+        "Season with salt and pepper, and blend partially or fully if you prefer a smoother soup.",
       ]
     },
     {
@@ -1314,6 +1538,15 @@
         {n:"soy sauce", a:2, u:"tbsp"},
         {n:"fresh ginger", a:1, u:"tbsp"},
         {n:"garlic cloves", a:2},
+      ],
+      steps: [
+        "Press the tofu to remove excess water, then cube it.",
+        "Cut the broccoli into florets and slice the carrot thinly.",
+        "Mince the ginger and garlic.",
+        "Heat oil in a wok or large pan and fry the tofu until golden on most sides; set aside.",
+        "In the same pan, stir-fry the broccoli and carrot for 3–4 minutes.",
+        "Add the ginger and garlic and cook for 30 seconds, then return the tofu to the pan.",
+        "Add the soy sauce, toss everything together, and cook for 1–2 more minutes before serving.",
       ]
     },
     {
@@ -1330,6 +1563,14 @@
         {n:"spinach", a:150, u:"g"},
         {n:"olive oil", a:1, u:"tbsp"},
         {n:"garlic cloves", a:1},
+      ],
+      steps: [
+        "Preheat the oven to 200°C (400°F).",
+        "Place the salmon fillets on a lined baking tray, drizzle with a little olive oil, and season with salt and pepper.",
+        "Slice the lemon and lay a few slices over each fillet.",
+        "Bake for 12–15 minutes, until the salmon flakes easily.",
+        "While the salmon bakes, mince the garlic and sauté the spinach in olive oil until wilted, about 2 minutes.",
+        "Serve the salmon over the sautéed spinach with the remaining lemon.",
       ]
     },
     {
@@ -1347,6 +1588,14 @@
         {n:"red onion", a:1},
         {n:"olive oil", a:2, u:"tbsp"},
         {n:"paprika", a:1, u:"tsp"},
+      ],
+      steps: [
+        "Preheat the oven to 210°C (410°F).",
+        "Cut the zucchini, bell pepper, and red onion into large chunks.",
+        "Arrange the chicken thighs and vegetables on a large baking tray.",
+        "Drizzle everything with olive oil and sprinkle with paprika, salt, and pepper.",
+        "Toss to coat, then spread out in a single layer.",
+        "Roast for 30–35 minutes, until the chicken is cooked through and the vegetables are tender.",
       ]
     },
   ];
@@ -1495,6 +1744,7 @@
     renderList();
     renderKitchen();
     if (pageWeekly.style.display !== 'none') renderWeekly();
+    if (pageFull.style.display !== 'none') renderFullRecipes();
   }
 
   async function initDriveAfterSignIn(){
@@ -1566,6 +1816,8 @@
     if (r.time === undefined) r.time = '';
     if (r.notes === undefined) r.notes = '';
     if (r.mealType === undefined) r.mealType = '';
+    if (r.steps === undefined) r.steps = [];
+    if (r.occasion === undefined) r.occasion = '';
     return r;
   }
 
@@ -1582,6 +1834,7 @@
   let activeSeason = "all"; // "all" | one of SEASONS ids
   let ingredientFilter = ""; // lowercase substring to match against ingredient names
   let onlyMakeable = false; // whether to filter to recipes fully covered by kitchen items
+  let onlySpecial = false; // whether to filter to recipes tagged with an occasion (holiday/special)
   let kitchenItems = []; // array of strings the user says they already have
   let editingId = null; // id of recipe being edited, or null when adding
   let confirmingDeleteId = null; // id currently showing "confirm delete?"
@@ -1618,18 +1871,27 @@
   const formDesc = document.getElementById('rpFormDesc');
   const formSeasons = document.getElementById('rpFormSeasons');
   const formMealType = document.getElementById('rpFormMealType');
+  const formOccasion = document.getElementById('rpFormOccasion');
   const formIngList = document.getElementById('rpFormIngList');
   const addIngBtn = document.getElementById('rpAddIngBtn');
+  const formStepList = document.getElementById('rpFormStepList');
+  const addStepBtn = document.getElementById('rpAddStepBtn');
   const formCancelBtn = document.getElementById('rpFormCancel');
   const formSaveBtn = document.getElementById('rpFormSave');
   const formErr = document.getElementById('rpFormErr');
   const kitchenFilterBtn = document.getElementById('rpKitchenFilterBtn');
+  const specialFilterBtn = document.getElementById('rpSpecialFilterBtn');
   const kitchenInput = document.getElementById('rpKitchenInput');
   const kitchenAddBtn = document.getElementById('rpKitchenAddBtn');
   const kitchenListEl = document.getElementById('rpKitchenList');
   const navEl = document.getElementById('rpNav');
   const pageRecipes = document.getElementById('rpPageRecipes');
   const pageWeekly = document.getElementById('rpPageWeekly');
+  const pageFull = document.getElementById('rpPageFull');
+  const fullList = document.getElementById('rpFullList');
+  const fullHint = document.getElementById('rpFullHint');
+  const exportPdfBtn = document.getElementById('rpExportPdfBtn');
+  const printArea = document.getElementById('rpPrintArea');
   const weekGrid = document.getElementById('rpWeekGrid');
   const autoArrangeBtn = document.getElementById('rpAutoArrangeBtn');
   const exportImgBtn = document.getElementById('rpExportImgBtn');
@@ -1639,6 +1901,8 @@
   const viewTag = document.getElementById('rpViewTag');
   const viewDesc = document.getElementById('rpViewDesc');
   const viewIngredients = document.getElementById('rpViewIngredients');
+  const viewStepsWrap = document.getElementById('rpViewStepsWrap');
+  const viewSteps = document.getElementById('rpViewSteps');
   const viewCloseBtn = document.getElementById('rpViewClose');
 
   async function loadRecipes(){
@@ -1898,6 +2162,9 @@
     if (onlyMakeable) {
       list = list.filter(r => recipeHasOverlap(r));
     }
+    if (onlySpecial) {
+      list = list.filter(r => r.occasion && r.occasion.trim());
+    }
     return list;
   }
 
@@ -1907,6 +2174,7 @@
     if (list.length === 0){
       let msg = 'No recipes tagged for this season yet.';
       if (onlyMakeable) msg = kitchenItems.length ? `No recipes overlap with what's in your kitchen yet.` : `Add a few ingredients to "In My Kitchen" first.`;
+      else if (onlySpecial) msg = `No holiday or special-occasion recipes yet — add one and set its "Occasion" field.`;
       else if (ingredientFilter) msg = `No recipes with "${ingredientFilter}" for this season.`;
       grid.innerHTML = `<p class="rp-no-match">${msg}</p>`;
       return;
@@ -1938,7 +2206,7 @@
           <div>
             <p class="rp-name">${r.name}</p>
             ${displayTag(r) ? `<p class="rp-tag-row">${displayTag(r)}</p>` : ''}
-            <p class="rp-mealtype-row">${MEAL_TYPE_META[effectiveMealType(r)].icon} ${MEAL_TYPE_META[effectiveMealType(r)].label}</p>
+            <p class="rp-mealtype-row">${MEAL_TYPE_META[effectiveMealType(r)].icon} ${MEAL_TYPE_META[effectiveMealType(r)].label}${r.occasion ? ` · 🎉 ${r.occasion}` : ''}</p>
           </div>
           <div class="rp-check">${isPicked ? '✓' : ''}</div>
         </div>
@@ -2069,12 +2337,46 @@
     formIngList.appendChild(row);
   }
 
+  function renumberStepRows(){
+    formStepList.querySelectorAll('.rp-step-row').forEach((row, i) => {
+      const numEl = row.querySelector('.rp-step-num');
+      if (numEl) numEl.textContent = (i + 1) + '.';
+    });
+  }
+
+  function addStepRow(text){
+    const row = document.createElement('div');
+    row.className = 'rp-step-row';
+    row.innerHTML = `
+      <span class="rp-step-num"></span>
+      <textarea placeholder="Describe this step" rows="1">${text ? String(text).replace(/</g,'&lt;') : ''}</textarea>
+      <button type="button" class="rp-step-remove" aria-label="Remove step">✕</button>
+    `;
+    row.querySelector('.rp-step-remove').addEventListener('click', () => {
+      row.remove();
+      renumberStepRows();
+    });
+    formStepList.appendChild(row);
+    renumberStepRows();
+  }
+
+  function collectSteps(){
+    const rows = formStepList.querySelectorAll('.rp-step-row textarea');
+    const out = [];
+    rows.forEach(ta => {
+      const text = ta.value.trim();
+      if (text) out.push(text);
+    });
+    return out;
+  }
+
   function openForm(recipe){
     editingId = recipe ? recipe.id : null;
     modalTitle.textContent = recipe ? 'Edit recipe' : 'Add a recipe';
     formName.value = recipe ? recipe.name : '';
     formTime.value = recipe ? (recipe.time || '') : '';
     formNotes.value = recipe ? (recipe.notes || '') : '';
+    formOccasion.value = recipe ? (recipe.occasion || '') : '';
     formDesc.value = recipe ? (recipe.desc || '') : '';
     formErr.style.display = 'none';
     formErr.textContent = '';
@@ -2085,6 +2387,12 @@
       recipe.ingredients.forEach(ing => addIngredientRow(ing));
     } else {
       addIngredientRow(); addIngredientRow();
+    }
+    formStepList.innerHTML = '';
+    if (recipe && recipe.steps && recipe.steps.length){
+      recipe.steps.forEach(step => addStepRow(step));
+    } else {
+      addStepRow(); addStepRow();
     }
     modalOverlay.style.display = 'flex';
     formName.focus();
@@ -2118,11 +2426,13 @@
     const name = formName.value.trim();
     const time = formTime.value.trim();
     const notes = formNotes.value.trim();
+    const occasion = formOccasion.value.trim();
     const desc = formDesc.value.trim();
     const seasons = Array.from(formSeasons.querySelectorAll('.rp-season-chip.is-on')).map(c => c.dataset.season);
     const mealTypeChip = formMealType.querySelector('.rp-season-chip.is-on');
     const mealType = mealTypeChip ? mealTypeChip.dataset.mealtype : '';
     const ingredients = collectIngredients();
+    const steps = collectSteps();
 
     if (!name){
       formErr.textContent = 'Give the recipe a name.';
@@ -2143,10 +2453,10 @@
     if (editingId){
       const idx = recipes.findIndex(r => r.id === editingId);
       if (idx !== -1){
-        recipes[idx] = { ...recipes[idx], name, time, notes, mealType, desc, seasons, ingredients };
+        recipes[idx] = { ...recipes[idx], name, time, notes, occasion, mealType, desc, seasons, ingredients, steps };
       }
     } else {
-      recipes.push({ id: slugify(name), name, time, notes, mealType, desc, seasons, ingredients });
+      recipes.push({ id: slugify(name), name, time, notes, occasion, mealType, desc, seasons, ingredients, steps });
     }
 
     persistRecipes();
@@ -2170,6 +2480,7 @@
   formCancelBtn.addEventListener('click', closeForm);
   formSaveBtn.addEventListener('click', saveForm);
   addIngBtn.addEventListener('click', () => addIngredientRow());
+  addStepBtn.addEventListener('click', () => addStepRow());
   modalOverlay.addEventListener('click', (e) => {
     if (e.target === modalOverlay) closeForm();
   });
@@ -2302,6 +2613,12 @@
     onlyMakeable = !onlyMakeable;
     kitchenFilterBtn.classList.toggle('is-active', onlyMakeable);
     renderCards();
+  });
+  specialFilterBtn.addEventListener('click', () => {
+    onlySpecial = !onlySpecial;
+    specialFilterBtn.classList.toggle('is-active', onlySpecial);
+    renderCards();
+    if (pageFull && pageFull.style.display !== 'none') renderFullRecipes();
   });
 
   clearBtn.addEventListener('click', () => {
@@ -2503,6 +2820,13 @@
     viewIngredients.innerHTML = `<ul class="rp-view-ing-list">${r.ingredients.map(ing =>
       `<li>${ing.n}${ing.a !== undefined ? `<span>${fmtAmt(ing.a, ing.u)}</span>` : ''}</li>`
     ).join('')}</ul>`;
+    if (r.steps && r.steps.length){
+      viewStepsWrap.style.display = 'block';
+      viewSteps.innerHTML = `<ol class="rp-full-steps">${r.steps.map(s => `<li>${s}</li>`).join('')}</ol>`;
+    } else {
+      viewStepsWrap.style.display = 'none';
+      viewSteps.innerHTML = '';
+    }
     viewOverlay.style.display = 'flex';
   }
 
@@ -2597,14 +2921,94 @@
     exportImgBtn.disabled = false;
   });
 
+  function renderFullRecipes(){
+    const list = visibleRecipes();
+    fullHint.textContent = onlySpecial
+      ? 'Showing holiday & special-occasion recipes only.'
+      : 'Full ingredients and preparation steps for every recipe matching your current filters.';
+
+    if (!list.length){
+      fullList.innerHTML = `<p class="rp-weekly-empty">No recipes match the current filters. Adjust the filters on the Recipes page to see more.</p>`;
+      return;
+    }
+
+    fullList.innerHTML = list.map(r => `
+      <div class="rp-full-card">
+        <div class="rp-full-card-head">
+          <div>
+            <h3 class="rp-full-name">${r.name}</h3>
+            <p class="rp-mealtype-row">${MEAL_TYPE_META[effectiveMealType(r)].icon} ${MEAL_TYPE_META[effectiveMealType(r)].label}${r.occasion ? ` · 🎉 ${r.occasion}` : ''}${displayTag(r) ? ` · ${displayTag(r)}` : ''}</p>
+          </div>
+        </div>
+        <p class="rp-desc">${r.desc || ''}</p>
+        <div class="rp-full-cols">
+          <div>
+            <p class="rp-full-section-title">Ingredients (serves 2)</p>
+            <ul class="rp-full-ing-list">${r.ingredients.map(ing =>
+              `<li>${ing.n}${ing.a !== undefined ? `<span>${fmtAmt(ing.a, ing.u)}</span>` : ''}</li>`
+            ).join('')}</ul>
+          </div>
+          <div>
+            <p class="rp-full-section-title">Preparation</p>
+            ${r.steps && r.steps.length
+              ? `<ol class="rp-full-steps">${r.steps.map(s => `<li>${s}</li>`).join('')}</ol>`
+              : `<p class="rp-full-no-steps">No steps added yet — edit this recipe to add them.</p>`}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function buildPrintArea(){
+    const list = visibleRecipes();
+    const cards = list.map(r => `
+      <div style="page-break-inside: avoid; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #DAD5C7;">
+        <h2 style="margin:0 0 4px; font-size:20px; font-family: Georgia, 'Times New Roman', serif; color:#1E2A1F;">${r.name}</h2>
+        <p style="margin:0 0 10px; font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:#5C6B4A; font-family:-apple-system,Helvetica,Arial,sans-serif;">
+          ${MEAL_TYPE_META[effectiveMealType(r)].label}${r.occasion ? ` · ${r.occasion}` : ''}${displayTag(r) ? ` · ${displayTag(r)}` : ''}
+        </p>
+        ${r.desc ? `<p style="margin:0 0 12px; font-size:13px; color:#3a3a34; font-family:-apple-system,Helvetica,Arial,sans-serif;">${r.desc}</p>` : ''}
+        <div style="display:flex; gap:28px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:200px;">
+            <p style="margin:0 0 6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#5C6B4A; font-family:-apple-system,Helvetica,Arial,sans-serif;">Ingredients (serves 2)</p>
+            <ul style="margin:0; padding-left:18px; font-size:13px; color:#1E2A1F; font-family:-apple-system,Helvetica,Arial,sans-serif;">
+              ${r.ingredients.map(ing => `<li style="margin-bottom:4px;">${ing.n}${ing.a !== undefined ? ` — ${fmtAmt(ing.a, ing.u)}` : ''}</li>`).join('')}
+            </ul>
+          </div>
+          <div style="flex:1.4; min-width:240px;">
+            <p style="margin:0 0 6px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#5C6B4A; font-family:-apple-system,Helvetica,Arial,sans-serif;">Preparation</p>
+            ${r.steps && r.steps.length
+              ? `<ol style="margin:0; padding-left:18px; font-size:13px; color:#1E2A1F; font-family:-apple-system,Helvetica,Arial,sans-serif;">${r.steps.map(s => `<li style="margin-bottom:6px;">${s}</li>`).join('')}</ol>`
+              : `<p style="font-size:12.5px; color:#9a9488; font-style:italic; font-family:-apple-system,Helvetica,Arial,sans-serif;">No steps added.</p>`}
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    printArea.innerHTML = `
+      <div style="background:#fff; padding:20px;">
+        <h1 style="margin:0 0 4px; font-size:24px; font-family: Georgia, 'Times New Roman', serif; color:#1E2A1F;">Recipe Book</h1>
+        <p style="margin:0 0 20px; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:#9A9488; font-family:-apple-system,Helvetica,Arial,sans-serif;">Healthy &amp; Easy Recipes</p>
+        ${cards}
+      </div>
+    `;
+  }
+
+  exportPdfBtn.addEventListener('click', () => {
+    buildPrintArea();
+    window.print();
+  });
+
   navEl.querySelectorAll('.rp-nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       navEl.querySelectorAll('.rp-nav-btn').forEach(b => b.classList.remove('is-active'));
       btn.classList.add('is-active');
-      const isWeekly = btn.dataset.page === 'weekly';
-      pageRecipes.style.display = isWeekly ? 'none' : 'block';
-      pageWeekly.style.display = isWeekly ? 'block' : 'none';
-      if (isWeekly) renderWeekly();
+      const page = btn.dataset.page;
+      pageRecipes.style.display = page === 'recipes' ? 'block' : 'none';
+      pageWeekly.style.display = page === 'weekly' ? 'block' : 'none';
+      pageFull.style.display = page === 'full' ? 'block' : 'none';
+      if (page === 'weekly') renderWeekly();
+      if (page === 'full') renderFullRecipes();
     });
   });
 
